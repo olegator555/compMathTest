@@ -56,5 +56,3 @@ for i in range(1, m):
         a.itemset(i, i + 1, h)
 p = (y[i + 1] - 2 * y[i] + y[i - 1] for i in range(1, 99))
 
-
-div = max(L_n(x_i[i])) - f(x_i[i] for i in range(0, m))
