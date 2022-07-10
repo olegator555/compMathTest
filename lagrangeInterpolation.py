@@ -61,11 +61,22 @@ def spline_approx(x: list) -> list:
 
     b = [(3 * (c[i + 1] - c[i]) - step * step * (2 * c[i] + c[i + 1])) / 3 for i in range(0, point_num)]
     d = [(c[i + 1] - c[i]) / (3 * step) for i in range(0, point_num)]
+    l = []
+    l.append([y[i - 1] for i in (range(1, point_num))])
+    l.append(b)
+    l.append(c)
+    l.append(d)
+    return l
 
-    spl = np.zeros(point_num + 1)
-    for i in range(1, point_num):
-        spl.itemset(i, y[i - 1] + b[i] * step + c[i] * step ** 2 + d[i] * step ** 3)
-    return spl
+
+def spl(x_value: float, origin_x: list, step: float) -> tuple:
+    ans = -1
+    if -3.0 <= x_value <= 3:
+        for i in range(0, len(origin_x)):
+            if (x_value >= origin_x[i]) and (x_value < origin_x[i] + step):
+                ans = i
+            break
+    return spline_approx(origin_x), ans
 
 
 def x_values(point_num: int) -> list:
@@ -75,7 +86,12 @@ def x_values(point_num: int) -> list:
 points_count = 200
 spline_x = x_values(points_count)
 spline_y = [f(x_element) for x_element in spline_x]
-spline = spline_approx(spline_x)
+spline = []
+x = []
+for i in range(0, points_count - 1):
+    temp_spline, temp_x = spl(spline_x[i], x_i, spline_x[1] - spline_x[0])
+    spline.append(temp_spline)
+    x.append(temp_x)
 
 
 def max_approximation_error(original_values: list, approx_values: list) -> float:
