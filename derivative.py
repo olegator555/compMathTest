@@ -8,9 +8,18 @@ def f(x):
     return np.exp(-pow(x, 2))
 
 
-n = 100
+n = 5
 
 x_i = [-3 + 6 / n * i for i in range(0, n + 1)]
+step = x_i[1] - x_i[0]
+
+
+def origin_dy(x: float):
+    return -2 * x * np.exp(-pow(x, 2))
+
+
+def dy_dx(x_val: float, x_i: float):
+    return (f(x_val + x_i / 2) - f(x_val - x_i / 2)) / x_i
 
 
 def l_i(x, numb, j):
@@ -26,15 +35,17 @@ def l_i(x, numb, j):
 def L_n(x, n):
     s = 0
     for i in range(0, n + 1):
-        s += f(x) * l_i(x, n, i)
+        s += dy_dx(x, step) * l_i(x, n, i)
     return s
 
 
 m = 100
 x = [-3 + 6 / m * i for i in range(0, m + 1)]
-y = [f(i) for i in x]
+y = [origin_dy(i) for i in x]
 
 L = [L_n(i, n) for i in x]
+
+derivatives = [dy_dx(elemnt, step) for elemnt in x_i]
 
 plt.plot(x, y, label='initil f(x)')
 plt.plot(x, L, label='Lagrange')
@@ -56,3 +67,4 @@ for i in range(1, m):
         a.itemset(i, i + 1, h)
 p = (y[i + 1] - 2 * y[i] + y[i - 1] for i in range(1, 99))
 
+div = max(L_n(x_i[i])) - f(x_i[i] for i in range(0, m))
