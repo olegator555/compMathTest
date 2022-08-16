@@ -53,4 +53,4 @@ def lu(a):
 a = np.array([[7, 3, -11], [-6, 7, 10], [-11, 2, -2]], float)
 vector = np.array([3, 2, 1])
 lu(a)
-lu_decomposition(a)
+lu_decomposition(a) # also cheched, a != l*, so something is wrong
