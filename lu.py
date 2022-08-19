@@ -5,10 +5,10 @@ def lu_decomposition(a):
     n = len(a)
     l = np.zeros([n, n], float)
     u = np.zeros([n, n], float)
-    u[1, 1] = a[1, 1]
+    u[1, 1] = a[1, 1] #! 0, 0
     for i in range(0, n):
         l[i, i] = 1
-    for j in range(2, n):
+    for j in range(2, n): #! from 1
         u[1, j] = a[1, j]
         l[j, 1] = a[j, 1] / u[1, 1]
     for i in range(2, n):

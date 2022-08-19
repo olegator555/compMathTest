@@ -26,6 +26,6 @@ def gauss_solve(matrix, vector):
     return x # where are exceptions for system, which might not have a unique solution or has no solution at all?
 
 
-a = np.array([[1, 2, 3], [2, 2, 3], [3, 2, 3]], float)
-vector = np.array([3, 2, 1])
+a = np.array([[1, 2, 3, -1], [4, 1, 0, 3], [-1, 1, 0, 2], [0, 0, 0, 7]], float)
+vector = np.array([1, 3, 3, 0])
 print(gauss_solve(a, vector)) # wrong, there is no solution for the above system, but executed your code gives it
