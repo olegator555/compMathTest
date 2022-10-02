@@ -1,9 +1,5 @@
-import os
-
-import numpy as np
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-import math
+import numpy as np
 
 
 def f(x):
@@ -19,7 +15,7 @@ def x_grid_ch(n):
     return ch
 
 
-number_of_points = 200  # initial nodes number
+number_of_points = 5
 points_count = number_of_points * 10
 a = -1
 b = 1
@@ -51,7 +47,7 @@ f_initial = [f(x_element) for x_element in x_ax]
 lagrange_interpolation = [L_n(i, number_of_points) for i in x_ax]
 
 plt.plot(x_ax, f_initial, label='initil f(x)')
-plt.plot(x_ax, lagrange_interpolation, label='Lagrange interp.')
+plt.plot(x_ax, lagrange_interpolation, label='Lagrange - 5 points.')
 
 plt.xlabel('x')
 plt.ylabel('f(x')

@@ -14,46 +14,49 @@ b = 6
 
 
 def spline_coeff() -> list:
-    a = np.zeros((point_num + 1, point_num + 1))
+    a = np.zeros((point_num, point_num))
     a.itemset((0, 0), 1)  # ! здесь уравнение вида c_1 = 0. почемему коэффициент 4*step?
-    a.itemset((point_num, point_num), 1)  # ! здесь уравнение вида c_{n+1} = 0, аналогично
-    for i in range(1, point_num):
+    a.itemset((point_num-1, point_num-1), 1)  # ! здесь уравнение вида c_{n+1} = 0, аналогично
+    for i in range(1, point_num-1):
         a.itemset((i, i),
                   4)  # не верно, i-е уравнение для коэффициентов c_i имеет вид: step*c_i + 2*step*c_{i+1} + step*c_{i+2} = ...
         a.itemset(i, i - 1, 1)  # не верно
         a.itemset(i, i + 1, 1)  # не верно
-    p = np.zeros(point_num + 1)
+    p = np.zeros(point_num)
     p.itemset(0, 0)
-    p.itemset(point_num, 0)
+    p.itemset(point_num-1, 0)
     for i in range(1, point_num - 1):  # ! разве -1?
-        p.itemset(i, 3 * (y[i - 1] - 2 * y[i] + y[i + 1]) / step * 2)  # +
+        p.itemset(i, 3 * (y[i - 1] - 2 * y[i] + y[i + 1]) / step ** 2)
     c = np.linalg.solve(a, p)  # n+1
 
     # b = [(3 * (c[i + 1] - c[i]) / step - step * (2 * c[i] + c[i + 1])) / 3 for i in range(0, point_num)]
-    b = [(y[i] - y[i - 1]) / step - step / 3 * (2 * c[i] + c[i + 1]) for i in range(1, point_num)]
+    b = [(y[i + 1] - y[i]) / step - step / 3 * (2 * c[i] + c[i + 1]) for i in range(0, point_num - 1)]
     # d = [(c[i + 1] - c[i]) / (3 * step) for i in range(0, point_num)]
     d = [(c[i + 1] - c[i]) / (3 * step) for i in range(0, point_num - 1)]
     l = []
-    l.append([y[i - 1] for i in (range(1, point_num))])  # размер массива = n-1, а коэффицентов n!
+    l.append([y[i] for i in (range(0, point_num-1))])  # размер массива = n-1, а коэффицентов n!
     l.append(b)
-    l.append([c[i] for i in range(1, point_num)])
+    l.append([c[i] for i in range(0, point_num-1)])
     l.append(d)
     return l
 
 
 l = spline_coeff()
+print(l)
 
 
 def spline(x_value: float, origin_x: list):
     step = origin_x[1] - origin_x[0]
     ans = -1
     if a <= x_value <= b:
-        for i in range(0, len(origin_x) - 2):
+        for i in range(0, len(origin_x) - 1):
             if (x_value >= origin_x[i]) and (x_value < origin_x[i] + step):
                 ans = i
             else:
                 continue
-            break
+        #return ans
+    else:
+        print('out of range!')
 
     # print(ans)
     return l[0][ans] + l[1][ans] * (x_value - origin_x[ans]) + l[2][ans] * ((x_value - origin_x[ans]) ** 2) + l[3][
