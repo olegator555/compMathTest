@@ -85,13 +85,14 @@ for i in range(0, number_of_points):
 lagrange_interpolation_rnd = [L_n(i, number_of_points, x_grid_values) for i in x_values]
 lagrange_interpolation_rnd_ch = [L_n(i, number_of_points, x_grid_ch_values) for i in x_values]
 plt.plot(x_values, y_values, label='initil f(x)')
-plt.plot(x_values, lagrange_interpolation_rnd, label='Lagrange - 8 points.')
-plt.plot(x_values, lagrange_interpolation_rnd_ch, label='Lagrange ch - 8 points.')
-plt.savefig("./1.png")
+plt.plot(x_values, lagrange_interpolation_rnd, label='Lagrange uniform.')
+plt.plot(x_values, lagrange_interpolation_rnd_ch, label='Lagrange ch.')
+
 
 plt.xlabel('x')
 plt.ylabel('f(x')
 plt.legend()
+plt.savefig("./2.png")
 plt.show()
 
 polynom = []
@@ -111,7 +112,7 @@ for N in range(1, 31):
             max_diff_ch = diff_ch
     max_diffs.append([N, max_diff_uniform, max_diff_ch])
 
-n_points = [3, 8, 14, 22]
+n_points = [3, 8, 13, 18, 23]
 diff_points = []
 diff_points_ch = []
 n_index = []
@@ -122,7 +123,7 @@ for point in n_points:
 
 plt.semilogy(n_points, diff_points, label='unform diff f(x)')
 plt.semilogy(n_points, diff_points_ch, label='ch diff f(x)')
-plt.savefig("./1.png")
+plt.savefig("./3.png")
 
 plt.xlabel('x')
 plt.ylabel('f(x')
