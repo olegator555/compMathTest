@@ -1,25 +1,17 @@
 import java.util.stream.IntStream;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 import java.util.ArrayList;
 import static java.lang.Math.*;
 
 public class Integrates {
+    int n = 3;
     public static void main(String[] args) {
-        for(int i=3; i<1000; i++)
-        {
-            Main_function f = new Main_function();
-            ArrayList<Double> simpson_series = new ArrayList<>();
-            ArrayList<Double> trapezoid_series = new ArrayList<>();
-            simpson_series.add(composite_simpson(10e-6,Functions.T,i, f)-Functions.A);
-            trapezoid_series.add(composite_trapezoid(10e-6,Functions.T,i,f)-Functions.A);
-            System.out.println(simpson_series);
-            System.out.println(trapezoid_series);
-
-
-        }
+        Main_function main_function = new Main_function();
+        System.out.println(composite_simpson(-1/3, 1/3, 3, main_function));
     }
     public static double composite_simpson(double a, double b, int n, Main_function f){
         double h = (b-a)/n;
+        System.out.println(h);
         double k1 = 0, k2 = 0;
         for(int i = 1; i < n; i += 2) {
             k1 += f.getFunction(a + i*h);
@@ -44,10 +36,7 @@ public class Integrates {
 class Main_function implements Functions {
     @Override
     public double getFunction(double x) {
-        double dx = C * (-cos(2 * x));
-        double y = C * (0.5 - 0.5 * cos(2 * x));
-        double dy = sin(2 * x) / (1 - cos(2 * x));
-        return sqrt((1 + pow(dy, 2)) / (2 * g * y)) * dx;
+        return cos(x)*cos(x);
     }
 
     @Override
