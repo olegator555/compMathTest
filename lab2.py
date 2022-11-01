@@ -27,7 +27,7 @@ approximation_errors = []
 for value in g1_der_values:
     approximation_errors.append(abs(value - origin_g1_der))
 
-# matplotlib.use('TkAgg')
+matplotlib.use('TkAgg')
 plt.loglog(h_values, approximation_errors, label='Approximation Error')
 plt.xlabel('x')
 plt.ylabel('f(x')
@@ -62,39 +62,34 @@ def composite_simpson(a: float, b: float, number_of_points: int, f):
 plt.show()
 
 
-def gauss_func(x):
+def Lg5(x):
     return (63 * x ** 5 - 70 * x ** 3 + 15 * x) / 8
 
 
-def mul_func(x, x_values):
-    for i in range(0, 5):
-        mul = 1
-        for j in range(0, 5):
-            if i != j:
-                mul *= (x - x_values[j]) / (x_values[i] - x_values[j])
+lg5_str = '63 * x ** 5 - 70 * x ** 3 + 15 * x) / 8'
 
 
-def sympy_function(func: sympy.Expr, var_dict: dict) -> sympy.Expr:
-    new_dict = {key: sympy.Symbol(str(val)) for key, val in var_dict.items()}
-    result = func.subs(new_dict)
-    return result
-
-
-def gauss_quad():
+def gauss_quad(f, f_str):
     c = []
-    x = [0, np.sqrt(5 - 2 * np.sqrt((10 / 7))) / (-3), np.sqrt(5 - 2 * np.sqrt((10 / 7))) / 3,
-         np.sqrt(5 + 2 * np.sqrt((10 / 7))) / (-3),
-         np.sqrt(5 + 2 * np.sqrt((10 / 7))) / 3]
+    # x = [0, np.sqrt(5 - 2 * np.sqrt((10 / 7))) / (-3), np.sqrt(5 - 2 * np.sqrt((10 / 7))) / 3,
+    #      np.sqrt(5 + 2 * np.sqrt((10 / 7))) / (-3),
+    #      np.sqrt(5 + 2 * np.sqrt((10 / 7))) / 3]
+    x_arg = Symbol('x')
+    x = solve(f_str, x_arg)
+
     for i in range(0, 5):
         mul = ""
-        x_arg, xj, xi = sympy.symbols("x xj xi")
         for j in range(0, 5):
-            func = sympy.Expr
             if i != j:
-                mul += "(x-(%f))/(%f-(%f))" % (x[j], x[i], x[j])
-        x_arg = Symbol('x')
-        ans = sympy.solve(mul, x_arg)
-        print(ans)
+                mul += "(x-%s)/(%s-%s)*" % (x[j], x[i], x[j])
+        mul = mul[:-1]
+        ans = sympy.integrate(mul, (x_arg, -1, 1))
+        c.append(ans)
+    sum = 0
+    for i in range(0, 5):
+        sum += c[i] * f(x[i])
+    return sum
 
-print(gauss_quad())
+
+print(gauss_quad(Lg5, lg5_str))
 print("done!")
