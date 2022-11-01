@@ -66,17 +66,13 @@ def Lg5(x):
     return (63 * x ** 5 - 70 * x ** 3 + 15 * x) / 8
 
 
-lg5_str = '63 * x ** 5 - 70 * x ** 3 + 15 * x) / 8'
+lg5_str = '(63*x**5-70*x**3+15*x)/8'
 
 
-def gauss_quad(f, f_str):
+def gauss_quad(f, x):
     c = []
-    # x = [0, np.sqrt(5 - 2 * np.sqrt((10 / 7))) / (-3), np.sqrt(5 - 2 * np.sqrt((10 / 7))) / 3,
-    #      np.sqrt(5 + 2 * np.sqrt((10 / 7))) / (-3),
-    #      np.sqrt(5 + 2 * np.sqrt((10 / 7))) / 3]
     x_arg = Symbol('x')
-    x = solve(f_str, x_arg)
-
+    # x = solve(f_str, x_arg)
     for i in range(0, 5):
         mul = ""
         for j in range(0, 5):
@@ -91,5 +87,12 @@ def gauss_quad(f, f_str):
     return sum
 
 
-print(gauss_quad(Lg5, lg5_str))
+x_5 = [0, np.sqrt(5 - 2 * np.sqrt((10 / 7))) / (-3), np.sqrt(5 - 2 * np.sqrt((10 / 7))) / 3,
+     np.sqrt(5 + 2 * np.sqrt((10 / 7))) / (-3),
+     np.sqrt(5 + 2 * np.sqrt((10 / 7))) / 3]
+print(gauss_quad(Lg5, x_5))
+
+x_4 =
+
+
 print("done!")
