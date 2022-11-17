@@ -1,4 +1,3 @@
-import numpy
 import numpy as np
 
 
@@ -6,14 +5,16 @@ def lu(a, permute=False):
     n = len(a)
     u = np.zeros((n, n))
     l = np.zeros((n, n))
-    p = np.ones((n,n))
+    p = np.ones((n, n))
     m = np.zeros((n, n))
-    for i in range(0, n):
-        m.itemset((i, i), 1)
+    u = a
     for j in range(0, n):
+        m_i = np.zeros((n, n))
+        for i in range(0, n):
+            m_i.itemset((i,i),1)
         for i in range(j + 1, n):
-            m.itemset((i, j), -a[j, i] / a[j, j])
-    u = np.matmul(a, m)
+            m_i.itemset((i, j), -a[j, i] / a[j, j])
+        u = np.matmul(u, m_i)
     return u
 
 
