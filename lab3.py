@@ -3,10 +3,8 @@ import numpy as np
 
 def lu(a, permute=False):
     n = len(a)
-    u = np.zeros((n, n))
     l = np.zeros((n, n))
     p = np.ones((n, n))
-    m = np.zeros((n, n))
     u = a
     for j in range(0, n):
         m_i = np.zeros((n, n))
