@@ -3,6 +3,15 @@ import numpy
 import numpy as np
 
 
+def swap(a, s1, s2):
+    n = len(a)
+    tmp = np.array(a[s1])
+    for i in range(0, n):
+        a.itemset((s1, i), a[s2, i])
+        a.itemset((s2, i), tmp[i])
+    return a
+
+
 def max_value_and_index(a):
     max = 0
     max_ind = 0
@@ -47,31 +56,33 @@ def lu(a1, permute):
         for j in range(0, n):
             m_j = np.identity(n)
             for i in range(j + 1, n):
-                if abs(a[j, j] - a[j - 1, j]) > 10e-10:
-                    m_j.itemset((i, j), -a[j, i] / a[j, j])
-                    l.itemset((i, j), a[j, i] / a[j, j])  # plus, and these expressions are for the l matrix
+                if abs(a[j, j]) > 10e-10:
+                    m_j.itemset((i, j), -a[i, j] / a[j, j])
+                    l.itemset((i, j), a[i, j] / a[j, j])  # plus, and these expressions are for the l matrix
 
                 else:
                     print('check')
-                    max_ind = max_value_and_index(a[i][i:])
+                    max_ind = max_value_and_index(a[j:][j])
                     print(f"max_ind = ", max_ind)
-                    tmp2 = a[i, j]
-                    a[i, j] = a[max_ind, j]
+                    a = swap(a, j, max_ind)
+                    # tmp2 = a[i, j]
+                    # a[i, j] = a[max_ind, j]
 
-                    a[max_ind, j] = tmp2
+                    # a[max_ind, j] = tmp2
 
-                    tmp2 = p[i, j]
-                    p[i, j] = p[max_ind, j]
-                    p[max_ind, j] = tmp2
-                    m_j.itemset((i, j), -a[j, i] / a[j, j])
-                    l.itemset((i, j), a[j, i] / a[j, j])
+                    # tmp2 = p[i, j]
+                    p = swap(p, j, max_ind)
+                    print(f"swap_test", swap(np.identity(3), 2, 1))
+                    m_j.itemset((i, j), -a[i, j] / a[j, j])
+                    l.itemset((i, j), a[i, j] / a[j, j])
+            a = np.matmul(m_j, a)
             # m_n.append(m_i)
             u = np.matmul(m_j, u)
         # u = np.matmul(np.linalg.inv(l), a)
         # u = a
         # for i in range(len(m_n))
         # u = np.matmul(m_n[i], u)
-        return [l, u, p]
+        return [l, np.matmul(p, u), p]
 
 
 a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
@@ -94,7 +105,8 @@ print('1st matrix, LU-decomposition: ')
 print('a = ', '\n', a, ' = ')
 print('l = ', '\n', l, ' *')
 print('*u = ', '\n', u)
-print('l*u = ', '\n', np.matmul(l,u))
+print('l*u = ', '\n', np.matmul(l, u))
+
 
 def solve(l, u, vec):
     n = len(l)
@@ -119,12 +131,12 @@ print('1st matrix, LU-decomposition: ')
 print('a = ', '\n', a, ' = ')
 print('l = ', '\n', l, ' *')
 print('*u = ', '\n', u)
-print('l*u = ', '\n', np.matmul(l,u))
+print('l*u = ', '\n', np.matmul(l, u))
 
 print('2nd matrix, LUP-decomposition: ')
-print('p*a = ', '\n', np.matmul(tmp1[2],a1), ' = ')
+print('p*a = ', '\n', np.matmul(tmp1[2], a1), ' = ')
 print('l = ', '\n', l1, ' *')
 print('*u = ', '\n', u1)
-print('l*u = ', '\n', np.matmul(l1,u1))
+print('l*u = ', '\n', np.matmul(l1, u1))
 
 print('p = ', '\n', tmp1[2])
