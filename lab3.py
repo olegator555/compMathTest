@@ -1,3 +1,4 @@
+import mpmath
 import numpy
 import numpy as np
 
@@ -12,9 +13,11 @@ def max_value_and_index(a):
     return max_ind
 
 
-def lu(a, permute):
+def lu(a1, permute):
+    a = a1
     # m_n = []
     if not permute:
+
         n = len(a)
         u = a
         # u = np.zeros((n, n))
@@ -24,8 +27,9 @@ def lu(a, permute):
         for j in range(0, n):
             m_j = np.identity(n)
             for i in range(j + 1, n):
-                m_j.itemset((i, j), -a[j, i] / a[j, j])
-                l.itemset((i, j), a[j, i] / a[j, j])  # plus, and these expressions are for the l matrix
+                m_j.itemset((i, j), -a[i, j] / a[j, j])
+                l.itemset((i, j), a[i, j] / a[j, j])  # plus, and these expressions are for the l matrix
+            a = np.matmul(m_j, a)
             # m_n.append(m_i)
             u = np.matmul(m_j, u)
         # u = np.matmul(np.linalg.inv(l), a)
@@ -46,6 +50,7 @@ def lu(a, permute):
                 if abs(a[j, j] - a[j - 1, j]) > 10e-10:
                     m_j.itemset((i, j), -a[j, i] / a[j, j])
                     l.itemset((i, j), a[j, i] / a[j, j])  # plus, and these expressions are for the l matrix
+
                 else:
                     print('check')
                     max_ind = max_value_and_index(a[i][i:])
@@ -69,7 +74,7 @@ def lu(a, permute):
         return [l, u, p]
 
 
-# a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
+a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
 a1 = np.array([[1, 2, 0], [1, 2, 1], [0, 1, 2]])
 # l = lu(a, False)[0]
 # u = lu(a, False)[1]
@@ -77,17 +82,19 @@ tmp = lu(a1, True)
 l1 = tmp[0]
 u1 = tmp[1]
 
-# print(l)
-# print(u)
-# print(a)
-# print(np.matmul(l,u))
+tmp = lu(a, False)
+l = tmp[0]
+u = tmp[1]
 
-print(l1)
-print(u1)
-print(tmp[2])
-print(np.matmul(tmp[2], a1))
-print(np.matmul(l1, u1))
+tmp1 = lu(a1, True)
+l1 = tmp1[0]
+u1 = tmp1[1]
 
+print('1st matrix, LU-decomposition: ')
+print('a = ', '\n', a, ' = ')
+print('l = ', '\n', l, ' *')
+print('*u = ', '\n', u)
+print('l*u = ', '\n', np.matmul(l,u))
 
 def solve(l, u, vec):
     n = len(l)
@@ -107,6 +114,17 @@ def solve(l, u, vec):
     return x
 
 
-vector = [-16, 12, 39]
-x = solve(l1, u1, vector)
-print(x)
+print('p = ', '\n', tmp1[2])
+print('1st matrix, LU-decomposition: ')
+print('a = ', '\n', a, ' = ')
+print('l = ', '\n', l, ' *')
+print('*u = ', '\n', u)
+print('l*u = ', '\n', np.matmul(l,u))
+
+print('2nd matrix, LUP-decomposition: ')
+print('p*a = ', '\n', np.matmul(tmp1[2],a1), ' = ')
+print('l = ', '\n', l1, ' *')
+print('*u = ', '\n', u1)
+print('l*u = ', '\n', np.matmul(l1,u1))
+
+print('p = ', '\n', tmp1[2])
