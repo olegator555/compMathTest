@@ -1,6 +1,7 @@
 import mpmath
 import numpy
 import numpy as np
+import scipy.linalg
 
 
 def swap(a, s1, s2):
@@ -62,7 +63,7 @@ def lu(a1, permute):
 
                 else:
                     print('check')
-                    max_ind = max_value_and_index(a[j:][j])
+                    max_ind = max_value_and_index(a[:][j])
                     print(f"max_ind = ", max_ind)
                     a = swap(a, j, max_ind)
                     # tmp2 = a[i, j]
@@ -72,7 +73,6 @@ def lu(a1, permute):
 
                     # tmp2 = p[i, j]
                     p = swap(p, j, max_ind)
-                    print(f"swap_test", swap(np.identity(3), 2, 1))
                     m_j.itemset((i, j), -a[i, j] / a[j, j])
                     l.itemset((i, j), a[i, j] / a[j, j])
             a = np.matmul(m_j, a)
@@ -86,7 +86,10 @@ def lu(a1, permute):
 
 
 a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
-a1 = np.array([[1, 2, 0], [1, 2, 1], [0, 1, 2]])
+vec = [4, 1, -3, 4]
+a1 = np.array([[3, 1, -3], [6, 2, 5], [1, 4, -3]])
+vec1 = [-16, 12, -39]
+correct_result = np.linalg.solve(a, vec)
 # l = lu(a, False)[0]
 # u = lu(a, False)[1]
 tmp = lu(a1, True)
@@ -109,20 +112,21 @@ print('l*u = ', '\n', np.matmul(l, u))
 
 
 def solve(l, u, vec):
-    n = len(l)
-    b = np.matmul(l, vec)
+    n = len(vec)
     y = []
-    x = []
     for k in range(0, n):
         sum = 0
-        for i in range(0, k - 1):
+        for i in range(0, k):
             sum += l[k, i] * y[i]
-        y.append(b[k] - sum)
+            print(sum)
+        y.append(vec[k] - sum)
+    x = [0.0] * n
     for k in range(0, n):
         sum = 0
         for i in range(k + 1, n):
             sum += u[k, i] * x[i]
-        x.append(y[k] / u[k, k] - sum / u[k, k])
+            print(sum)
+        x[k] = y[k] / u[k, k] - sum / u[k, k]
     return x
 
 
@@ -140,3 +144,8 @@ print('*u = ', '\n', u1)
 print('l*u = ', '\n', np.matmul(l1, u1))
 
 print('p = ', '\n', tmp1[2])
+
+result = solve(l, u, vec)
+
+print("correct result", correct_result)
+print("solve result", result)
