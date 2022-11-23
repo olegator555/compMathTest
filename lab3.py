@@ -82,7 +82,7 @@ def lu(a1, permute):
         # u = a
         # for i in range(len(m_n))
         # u = np.matmul(m_n[i], u)
-        return [l, np.matmul(p, u), p]
+        return [np.matmul(np.matmul(p, l), np.linalg.inv(p)), np.matmul(p, u), p]
 
 
 a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
