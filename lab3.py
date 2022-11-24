@@ -2,6 +2,7 @@ import mpmath
 import numpy
 import numpy as np
 import scipy.linalg
+import matplotlib.pyplot as plt
 
 
 def swap(a, s1, s2):
@@ -13,7 +14,7 @@ def swap(a, s1, s2):
     return a
 
 
-def max_value_and_index(a):
+def index_of_max_element(a):
     max = 0
     max_ind = 0
     for i in range(0, len(a)):
@@ -25,9 +26,14 @@ def max_value_and_index(a):
 
 def lu(a1, permute):
     a = a1
+    n = len(a)
+
+    p = np.identity(n)
+
     if not permute:
 
         n = len(a)
+
         u = a
         l = np.identity(n)
         for j in range(0, n):
@@ -37,52 +43,34 @@ def lu(a1, permute):
                 l.itemset((i, j), a[i, j] / a[j, j])
             a = np.matmul(m_j, a)
             u = np.matmul(m_j, u)
-        return [l, u]
+        return [l, u, p]
     else:
-        n = len(a)
         u = a
-        # u = np.zeros((n, n))
         l = np.identity(n)
-        p = np.identity(n)
-        # m = np.zeros((n, n))
         for j in range(0, n):
             m_j = np.identity(n)
             for i in range(j + 1, n):
                 if abs(a[j, j]) > 10e-10:
                     m_j.itemset((i, j), -a[i, j] / a[j, j])
-                    l.itemset((i, j), a[i, j] / a[j, j])  # plus, and these expressions are for the l matrix
+                    l.itemset((i, j), a[i, j] / a[j, j])
 
                 else:
                     print('check')
-                    max_ind = max_value_and_index(a[:][j])
+                    max_ind = index_of_max_element(a[:][j])
                     print(f"max_ind = ", max_ind)
                     a = swap(a, j, max_ind)
-                    # tmp2 = a[i, j]
-                    # a[i, j] = a[max_ind, j]
-
-                    # a[max_ind, j] = tmp2
-
-                    # tmp2 = p[i, j]
                     p = swap(p, j, max_ind)
                     m_j.itemset((i, j), -a[i, j] / a[j, j])
                     l.itemset((i, j), a[i, j] / a[j, j])
             a = np.matmul(m_j, a)
-            # m_n.append(m_i)
             u = np.matmul(m_j, u)
-        # u = np.matmul(np.linalg.inv(l), a)
-        # u = a
-        # for i in range(len(m_n))
-        # u = np.matmul(m_n[i], u)
         return [np.matmul(np.matmul(p, l), np.linalg.inv(p)), np.matmul(p, u), p]
 
 
-a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
+a = np.array([[1, 1, 0, 3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
 vec = [4, 1, -3, 4]
 a1 = np.array([[3, 1, -3], [6, 2, 5], [1, 4, -3]])
 vec1 = [-16, 12, -39]
-correct_result = scipy.linalg.solve(a, vec)
-# l = lu(a, False)[0]
-# u = lu(a, False)[1]
 tmp = lu(a1, True)
 l1 = tmp[0]
 u1 = tmp[1]
@@ -102,7 +90,31 @@ print('*u = ', '\n', u)
 print('l*u = ', '\n', np.matmul(l, u))
 
 
-def solve(l, u, vec):
+def convert_to_p(piv):
+    P = np.eye(3)
+    for i, p in enumerate(piv):
+        Q = np.eye(3, 3)
+        q = Q[i, :].copy()
+        Q[i, :] = Q[p, :]
+        Q[p, :] = q
+        P = np.dot(P, Q)
+        return P
+
+
+def convert_to_lu(l, u):
+    n = len(l)
+    lu = np.zeros((n, n))
+    for i in range(0, n):
+        for j in range(0, n):
+            if i > j:
+                lu.itemset((i, j), l[i, j])
+            if i <= j:
+                lu.itemset((i, j), u[i, j])
+    return lu
+
+
+def solve(l, u, vec1, p):
+    vec = np.matmul(vec1, p)
     n = len(vec)
     y = []
     for k in range(0, n):
@@ -136,7 +148,10 @@ print('l*u = ', '\n', np.matmul(l1, u1))
 
 print('p = ', '\n', tmp1[2])
 
-result = solve(l, u, vec)
+# result = solve(l, u, vec, p)
 
-print("correct result", correct_result)
-print("solve result", result)
+# print("solve result", result)
+
+
+
+print("done")
