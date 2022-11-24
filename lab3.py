@@ -25,27 +25,18 @@ def max_value_and_index(a):
 
 def lu(a1, permute):
     a = a1
-    # m_n = []
     if not permute:
 
         n = len(a)
         u = a
-        # u = np.zeros((n, n))
         l = np.identity(n)
-        # p = np.ones((n,n))
-        # m = np.zeros((n, n))
         for j in range(0, n):
             m_j = np.identity(n)
             for i in range(j + 1, n):
                 m_j.itemset((i, j), -a[i, j] / a[j, j])
-                l.itemset((i, j), a[i, j] / a[j, j])  # plus, and these expressions are for the l matrix
+                l.itemset((i, j), a[i, j] / a[j, j])
             a = np.matmul(m_j, a)
-            # m_n.append(m_i)
             u = np.matmul(m_j, u)
-        # u = np.matmul(np.linalg.inv(l), a)
-        # u = a
-        # for i in range(len(m_n))
-        # u = np.matmul(m_n[i], u)
         return [l, u]
     else:
         n = len(a)
@@ -89,7 +80,7 @@ a = np.array([[1, 1, 0, -3], [2, 1, -1, 1], [3, -1, -1, 2], [-1, 2, 3, -1]])
 vec = [4, 1, -3, 4]
 a1 = np.array([[3, 1, -3], [6, 2, 5], [1, 4, -3]])
 vec1 = [-16, 12, -39]
-correct_result = np.linalg.solve(a, vec)
+correct_result = scipy.linalg.solve(a, vec)
 # l = lu(a, False)[0]
 # u = lu(a, False)[1]
 tmp = lu(a1, True)
@@ -132,7 +123,7 @@ def solve(l, u, vec):
 
 print('p = ', '\n', tmp1[2])
 print('1st matrix, LU-decomposition: ')
-print('a = ', '\n', a, ' = ')
+
 print('l = ', '\n', l, ' *')
 print('*u = ', '\n', u)
 print('l*u = ', '\n', np.matmul(l, u))
