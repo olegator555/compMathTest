@@ -145,13 +145,11 @@ print('p*a = ', '\n', np.matmul(tmp1[2], a1), ' = ')
 print('l = ', '\n', l1, ' *')
 print('*u = ', '\n', u1)
 print('l*u = ', '\n', np.matmul(l1, u1))
-
 print('p = ', '\n', tmp1[2])
 
 # result = solve(l, u, vec, p)
 
 # print("solve result", result)
-
 
 
 print("done")
