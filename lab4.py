@@ -1,8 +1,10 @@
+import matplotlib
 import numpy
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+matplotlib.use('TkAgg')
 
 def J(z):
     x = z[0]
@@ -40,15 +42,17 @@ x_0array = [[200 * i, 200 * i] for i in range(1, 10)]
 
 x_0t = x_0array[4]
 
+x_0_values = []
+for i in range(1, 11):
+    for j in range(1, 11):
+        x_0_values.append(rk4([200*i, 200*j], 100, f, 0.1))
+
+for i, element in enumerate(x_0_values):
+    plt.plot(element[:][0], element[:][1], label=f'for {200*i}')
 rk1 = rk4([100, 100], 100, f, 0.1)
-rk2 = rk4([830, 1499], 100, f, 0.1)
 x1 = [rk1[i][0] for i in range(len(rk1))]
 y1 = [rk1[i][1] for i in range(len(rk1))]
-x2 = [rk2[i][0] for i in range(len(rk2))]
-y2 = [rk2[i][1] for i in range(len(rk2))]
-
 plt.plot(x1, y1, label='from (100,100)')
-plt.plot(x2, y2, label='from (800,1000)')
 
 plt.xlabel('x')
 plt.ylabel('y')
