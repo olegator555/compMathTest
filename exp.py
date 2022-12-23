@@ -1,8 +1,8 @@
-import matplotlib
 import numpy
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+from scipy import optimize
 
 
 def J(z):
@@ -20,6 +20,7 @@ def f(z):
 def h(y, z, t, f):
     f_fix = f(y - t / np.linalg.norm(z) * z)
     g = np.dot(f_fix, f_fix)
+    # print(g)
     return g
 
 
@@ -41,38 +42,22 @@ x_0array = [[200 * i, 200 * i] for i in range(1, 10)]
 
 x_0t = x_0array[4]
 
-x_0_values = []
-# for i in range(1, 11):
-#    for j in range(1, 11):
-#        x_0_values.append(rk4([200*i, 200*j], 100, f, 0.1))
-#
-# for i, element in enumerate(x_0_values):
-#    plt.plot(element[:][0], element[:][1], label=f'for {200*i}')
-iter_count = 0
-# for i in range(1, 10):
-#     for j in range(1, 10):
-#         rk1 = rk4([200*i, 200*j], 100, f, 0.1)
-#         x1 = [rk1[i][0] for i in range(len(rk1))]
-#         y1 = [rk1[i][1] for i in range(len(rk1))]
-#         plt.plot(x1, y1, label=f'from ({200*i},{200*j})')
-#         iter_count += 1
-# print(f"iter_count = {iter_count}")
-
-rk1 = rk4([10, 10], 1000, f, 0.1)
-rk2 = rk4([830, 1489], 1000, f, 0.1)
+rk1 = rk4([100, 100], 100, f, 0.1)
+rk2 = rk4([830, 1499], 100, f, 0.1)
 x1 = [rk1[i][0] for i in range(len(rk1))]
+y1 = [rk1[i][1] for i in range(len(rk1))]
 x2 = [rk2[i][0] for i in range(len(rk2))]
 y2 = [rk2[i][1] for i in range(len(rk2))]
-y1 = [rk1[i][1] for i in range(len(rk1))]
-plt.plot(x1, y1, label='from (10,10)')
-plt.plot(x2, y2, label='from (833,1489)')
+
+plt.plot(x1, y1, label='from (100,100)')
+plt.plot(x2, y2, label='from (800,1000)')
 
 plt.xlabel('x')
 plt.ylabel('y')
 plt.legend()
 
-plt.show()
 
+# plt.show()
 
 def newton(x_0, f, J):
     y1 = x_0
@@ -107,18 +92,25 @@ def gradient_descent(x_0, f, J):
     t = (a * (t2 + t3) + b * t3 + c * t2) / (2 * (a + b + c))
     y2 = y1 - 2 * t * z / np.linalg.norm(z)
     n = 1
-    while np.linalg.norm(y2 - y1, ord=np.inf) >= 10e-8:
+    while np.linalg.norm(y2 - y1, ord=np.inf) >= 10e-5:
         y1 = y2
         z = np.matmul(np.matrix.transpose(J(y1)), f(y1))
         t3 = solve_t3(h, y1, z, f)
+        # print(t3)
         t2 = t3 / 2
         a = (h(y1, z, 0, f) / (t2 * t3))
         b = (h(y1, z, t2, f) / (t2 * (t2 - t3)))
         c = (h(y1, z, t3, f) / (t3 * (t3 - t2)))
         t = (a * (t2 + t3) + b * t3 + c * t2) / (2 * (a + b + c))
+        # print(t)
         y2 = y1 - 2 * t * z / np.linalg.norm(z)
+        print(y2)
         n += 1
     return y2, n
 
 
-print(gradient_descent(np.array([1, 3]), f, J))
+# print(gradient_descent(np.array([800,1480]), f, J))
+sol = optimize.root(f, np.array([800, 1400]), method='lm', jac=J)
+print(sol)
+print(sol.nit)
+np.linalg.norm
